@@ -1,11 +1,12 @@
-from flask import Flask, render_template,request,redirect,url_for,flash
+from flask import Flask, render_template,request,redirect,url_for,flash,Response, session
 from flask_mysqldb import MySQL
 from flask_paginate import Pagination, get_page_args
 from random import sample
 from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
-
+from random import sample
+from flask_mail import Mail, Message
 
 
 
@@ -166,9 +167,86 @@ def usuario():
             return render_template("index.html")
 
 
+@app.route('/homeAdmin')
+def homeAdmin():
+    categorias = listabebidas()
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    
+    # Establecer el número de productos por página
+    per_page = 6  # Cambiar este valor para ajustar el número de productos por página
+    offset = page * per_page - per_page
+    
+    # Obtener el número total de productos
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT COUNT(*) FROM producto')
+    total = cursor.fetchone()[0]
+    cursor.execute('SELECT * FROM producto LIMIT %s OFFSET %s', (per_page, offset))
+    productos = cursor.fetchall()
+    cursor.close()
+    
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    
+    return render_template('homeAdmin.html', productos=productos, categorias=categorias, pagination=pagination, mensaje="Rol actual: Administrador")
+
+#DEVOLUCION AL LOGIN
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
+#INGRESO DE USUARIO
+@app.route('/ingreso', methods=['GET', 'POST']) 
+def ingreso():
+
+
+    if request.method == 'POST' and 'nombre' in request.form and 'contra' in request.form:
+        usuario = request.form.get('nombre') 
+        contra = request.form.get('contra')
+
+
+        cursor=mysql.connection.cursor()
+        cursor.execute("SELECT * from usuario where usuario = %s AND contra = %s", (usuario,contra))
+
+        account=cursor.fetchone()
+
+        if account:
+            session['logueado'] = True
+            session['usuario'] = usuario
+        
+        if account[3]==1:
+            return redirect(url_for('homeAdmin', account=account))
+        
+
+        elif account [3]==2:
+            return redirect(url_for('usuario'))
+        else:
+            return render_template('login.html', mensaje="USUARIO INCORRECTO" )
+
+
+#REGISTRO DE USUARIO
+@app.route("/registro")
+def registro():
+    return render_template("registro.html")
 
 
 
+@app.route('/crearRegistro', methods=['GET', 'POST'])
+def crearRegistro():   
+
+    nom = request.form.get('nombre') 
+    contra = request.form.get('contra')
+    #hash_password=bcrypt.generate_password_hash(contra).decode('utf8')
+
+    cursor=mysql.connection.cursor()
+    cursor.execute('INSERT INTO usuario(usuario,contra) VALUES(%s,%s)',(nom,contra,2))
+    mysql.connection.commit()
+
+    return render_template("registro.html", mensaje="Usuario registrado correctamente")
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

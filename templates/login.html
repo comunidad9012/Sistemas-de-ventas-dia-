@@ -22,7 +22,7 @@
             </div>
                 
 
-            <a class="navbar-brand" href="./home">SUPERMERCADO DIA</a>
+            <a class="navbar-brand" href="/">SUPERMERCADO DIA</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -60,23 +60,33 @@
                 </head>
 
 <body>
-    <h1>login de usuario</h1>
+  <div class="alert alert-success" role="alert" method="post">
+    {%if mensaje %}
+      {{mensaje}}
+    {%endif%}
+    <div>
 
-    <form action="/usuario" method="post" enctype='multipart/form-data'>
+
+    <h1>LOGIN DE USUARIO</h1>
+
+    <form action="/ingreso" method="post" enctype='multipart/form-data'>
 
     <div class="input-group input-group-sm mb-3">
-        <span class="input-group-text" id="inputGroup-sizing-sm">nombre</span>
-        <input type="text" name="nombre" id="nombre" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" >
+        <span class="input-group-text" id="inputGroup-sizing-sm">USUARIO</span>
+        <input type="email" name="nombre" id="nombre" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
       </div>
 
 
     <div class="input-group input-group-sm mb-3">
         <span class="input-group-text" id="inputGroup-sizing-sm">CONTRASENA</span>
-        <input type="text" name="nombre" id="nombre" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" >
+        <input type="password" name="contra" id="contra" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" required>
       </div>
+      
+      
 
 
     <button type="submit">INGRESAR</button>
+    <button><a href="./registro">REGISTRARTE</a></button>
 </form>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 

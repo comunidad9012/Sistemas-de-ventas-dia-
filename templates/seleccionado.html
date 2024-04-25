@@ -66,43 +66,52 @@
     </head>
     
     
-      <header>
-        <nav class="navbar navbar-expand-lg" style="background-color: #e71717;">
-          <div class="container-fluid">
-            <div >
-              <a class="navbar-brand" href="#"><img src="https://brand-partners.com.ar/wp-content/uploads/2021/02/Logo-DIA-Fondo-Rojo-1536x666.jpg" alt="Logo"></a>
-            </div>
-                
-            <!-- <a class="navbar-brand" href="./home">SUPERMERCADO DIA</a> -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="/">Home</a>
-                <a class="nav-link" href="./agregarProd">Ingresar Productos</a>
-                <a class="nav-link" href="./update">Actualizar Productos</a>
-              </div>
-            </div>
-                
-            <div class="categorias-lista">
-              <form method='POST' action="/categ">
-                <div class="col-2" style="font-family: Arial, Helvetica, sans-serif;">
-                  <select class="form-select" name="pc" id="pc" style="border-color: black; border-radius: 20px; " required>
-                    <option value="" selected disabled>Categorias</option>
-                    {% for x in categorias %}
-                    <option value="{{x[0]}}">{{x[1]}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-            </div>
-                
-            <button type="submit" class="btn btn-primary btn-select" >Seleccionar</button>
-                
+    <header>
+      <nav class="navbar navbar-expand-lg" style="background-color: #e71717;">
+        <div class="container-fluid">
+          <div >
+            <a class="navbar-brand" href="#"><img src="https://brand-partners.com.ar/wp-content/uploads/2021/02/Logo-DIA-Fondo-Rojo-1536x666.jpg" alt="Logo"></a>
           </div>
-          </form>
-        </nav>
-      </header>
+              
+          <!-- <a class="navbar-brand" href="./home">SUPERMERCADO DIA</a> -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="/"><u>Home</u></a>
+
+            </div>
+            <form action="/">
+              <div class="search-bar" style="position: relative;">
+              <input style="border-radius: 20px; border: 2px solid #fff; margin-left: 240px; width: 400px; padding: 6px 30px 6px 10px;" type="search" placeholder="Buscar productos..." aria-label="Buscar">
+              <i class="fa fa-search" style="position: absolute; right: 15px; top: 13px; color: rgb(10, 10, 10);"></i>
+            </div>
+            </form>
+            
+            
+        </div>
+  
+        <form method='POST' action="/categ" style="margin-top: 10px;">
+          <div style="font-family: Arial, Helvetica, sans-serif;">
+              <select class="form-select" name="pc" id="pc" style="margin-left: -140px; border-color: black; border-radius: 20px; width: 130px; margin-top: 16px;" required>
+                  <option value="" selected disabled style="background-color: rgb(157, 217, 245);" >Categorias</option>
+                  {% for x in categorias %}
+                  <option value="{{x[0]}}">{{x[1] }}</option>
+                  {% endfor %}
+              </select>
+  
+          </div>
+  
+          <button type="submit" class="btn btn-primary" style=" margin-top: -66px;" >Seleccionar</button>
+        </form>
+        
+              
+        
+  
+   
+      </nav>
+    </header>
 
   <br>
   <div class="container mt-4">

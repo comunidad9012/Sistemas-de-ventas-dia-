@@ -169,6 +169,7 @@ def usuario():
 
 @app.route('/homeAdmin')
 def homeAdmin():
+    
     categorias = listabebidas()
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     
@@ -186,7 +187,10 @@ def homeAdmin():
     
     pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     
-    return render_template('homeAdmin.html', productos=productos, categorias=categorias, pagination=pagination, mensaje="Rol actual: Administrador")
+    return render_template('homeAdmin.html', productos=productos, categorias=categorias,pagination=pagination, mensaje="Rol actual: Administrador")
+
+
+
 
 #DEVOLUCION AL LOGIN
 @app.route('/login')
@@ -205,25 +209,27 @@ def ingreso():
 
 
         cursor=mysql.connection.cursor()
-        cursor.execute("SELECT * from usuario where usuario = %s AND contra = %s", (usuario,contra))
 
+        cursor.execute("SELECT * from usuario where usuario = %s AND contra = %s", (usuario,contra))
         account=cursor.fetchone()
 
         if account:
             session['logueado'] = True
             session['usuario'] = usuario
-        
-        if account[3]==1:
-            return redirect(url_for('homeAdmin', account=account))
-        
 
-        elif account [3]==2:
-            return redirect(url_for('usuario'))
+
+            if account[3]==1:
+                return redirect(url_for('homeAdmin'))
+
+            elif account[3]==2:
+                return redirect(url_for(''))
+        
         else:
-            return render_template('login.html', mensaje="USUARIO INCORRECTO" )
+            return render_template('login.html', mensaje="USUARIO O CONTRASEÑA INCORRECTA")
+        
+        
 
-
-#REGISTRO DE USUARIO
+#REGISTRO DE USUARIOS
 @app.route("/registro")
 def registro():
     return render_template("registro.html")
@@ -235,13 +241,21 @@ def crearRegistro():
 
     nom = request.form.get('nombre') 
     contra = request.form.get('contra')
-    #hash_password=bcrypt.generate_password_hash(contra).decode('utf8')
 
-    cursor=mysql.connection.cursor()
-    cursor.execute('INSERT INTO usuario(usuario,contra) VALUES(%s,%s)',(nom,contra,2))
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT usuario FROM usuario')
+    resultados = cursor.fetchall()
+
+    for resultado in resultados: 
+        if resultado[0] == nom:
+            return render_template('registro.html', mensaje='Este usuario ya se encuentra registrado')
+    
+    cursor.execute('INSERT INTO usuario(usuario,contra,id_rol) VALUES(%s,%s,%s)', (nom, contra, 2))
     mysql.connection.commit()
 
     return render_template("registro.html", mensaje="Usuario registrado correctamente")
+
+    
 
 @app.route('/logout')
 def logout():

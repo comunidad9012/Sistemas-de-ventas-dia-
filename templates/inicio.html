@@ -70,7 +70,6 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-link active" aria-current="page" href="/"><u>Home</u></a>
-            <a class="nav-link" href="./agregarProd"><u>Ingresar Productos</u></a>
             <a class="nav-link" href="./login"><u>Iniciar sesión</u></a>
           </div>
           <form action="/">
@@ -83,9 +82,9 @@
           
       </div>
 
-      <form method='POST' action="/categ">
+      <form method='POST' action="/categ" style="margin-top: 10px;">
         <div style="font-family: Arial, Helvetica, sans-serif;">
-            <select class="form-select" name="pc" id="pc" style="margin-left: 0px; border-color: black; border-radius: 20px; " required>
+            <select class="form-select" name="pc" id="pc" style="margin-left: -140px; border-color: black; border-radius: 20px; width: 130px; margin-top: 16px;" required>
                 <option value="" selected disabled style="background-color: rgb(157, 217, 245);" >Categorias</option>
                 {% for x in categorias %}
                 <option value="{{x[0]}}">{{x[1] }}</option>
@@ -94,9 +93,9 @@
 
         </div>
 
-        
+        <button type="submit" class="btn btn-primary" style=" margin-top: -66px;" >Seleccionar</button>
       </form>
-      <button type="submit" class="btn btn-primary" style="margin-left: 10px;" >Seleccionar</button>
+      
             
       
 

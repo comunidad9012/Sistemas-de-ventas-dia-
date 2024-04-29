@@ -73,9 +73,9 @@
             <a class="nav-link" href="./agregarProd"><u>Ingresar Productos</u></a>
             
           </div>
-          <form action="/">
+          <form action="/buscarprod" method="post">
             <div class="search-bar" style="position: relative;">
-            <input style="border-radius: 20px; border: 2px solid #fff; margin-left: 60px; width: 400px; padding: 6px 30px 6px 10px;" type="search" placeholder="Buscar productos..." aria-label="Buscar">
+            <input style="border-radius: 20px; border: 2px solid #fff; margin-left: 240px; width: 400px; padding: 6px 30px 6px 10px;" type="search" placeholder="Buscar productos..." aria-label="Buscar">
             <i class="fa fa-search" style="position: absolute; right: 15px; top: 13px; color: rgb(10, 10, 10);"></i>
           </div>
           </form>
@@ -112,7 +112,7 @@
     </button>
     <ul class="dropdown-menu dropdown-menu-dark">
        {{mensaje}}
-       <a class="nav-link" href="./"><u>Cerrar sesión</u></a>
+       <a class="nav-link" href="/login"><u>Cerrar sesión</u></a>
     </ul>
   </div>
   {% for x in usuario %}

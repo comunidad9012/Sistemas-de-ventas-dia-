@@ -159,8 +159,12 @@ def seleccion():
         cursor.execute(sql,(id,))
         resultados = cursor.fetchall()
         categorias=listabebidas()
+        sql = "SELECT * FROM categorias WHERE idcategorias = %s " 
+        cursor.execute(sql,(id,))
+        productos = cursor.fetchone()
+        cursor.close()
 
-        return render_template('seleccionado.html', resultados=resultados, categorias=categorias)
+        return render_template('seleccionado.html', resultados=resultados, categorias=categorias, productos=productos)
 
 
 
@@ -208,7 +212,27 @@ def homeAdmin():
     
     return render_template('homeAdmin.html', productos=productos, categorias=categorias,pagination=pagination, mensaje="Rol actual: Administrador")
 
-
+@app.route('/homeUser')
+def homeUser():
+    
+    categorias = listabebidas()
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    
+    # Establecer el número de productos por página
+    per_page = 6  # Cambiar este valor para ajustar el número de productos por página
+    offset = page * per_page - per_page
+    
+    # Obtener el número total de productos
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT COUNT(*) FROM producto')
+    total = cursor.fetchone()[0]
+    cursor.execute('SELECT * FROM producto LIMIT %s OFFSET %s', (per_page, offset))
+    productos = cursor.fetchall()
+    cursor.close()
+    
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    
+    return render_template('homeUser.html', productos=productos, categorias=categorias,pagination=pagination, mensaje="Rol actual: Usuario")
 
 
 #DEVOLUCION AL LOGIN
@@ -241,7 +265,7 @@ def ingreso():
                 return redirect(url_for('homeAdmin'))
 
             elif account[3]==2:
-                return redirect(url_for(''))
+                return redirect(url_for('homeUser'))
         
         else:
             return render_template('login.html', mensaje="USUARIO O CONTRASEÑA INCORRECTA")
@@ -274,6 +298,20 @@ def crearRegistro():
 
     return render_template("registro.html", mensaje="Usuario registrado correctamente")
 
+
+@app.route('/buscarprod', methods=['POST'])
+def buscarprod():
+    consulta = request.form.get('consulta')
+    cursor = mysql.connection.cursor()
+    # Utilizamos el formato de placeholders %s y pasamos 'consulta' como parámetro en un tuple
+    query = "SELECT * FROM producto WHERE nombre LIKE %s"
+    like_pattern = f"%{consulta}%"  # Crea el patrón para la búsqueda LIKE
+    cursor.execute(query, (like_pattern,))
+    prodobtenido = cursor.fetchall()
+    cursor.close()  # No olvides cerrar el cursor
+    print(prodobtenido)
+    
+    return render_template('productobuscado.html', prodobtenido=prodobtenido)
     
 
 @app.route('/logout')

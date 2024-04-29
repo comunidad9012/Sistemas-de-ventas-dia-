@@ -69,12 +69,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="/"><u>Home</u></a>
-            <a class="nav-link" href="./login"><u>Iniciar sesión</u></a>
+            <a class="nav-link active" aria-current="page" href="/homeUser"><u>Home</u></a>
           </div>
-          <form action="/buscarprod" method="POST">
+          <form action="/buscarprod" method="post">
             <div class="search-bar" style="position: relative;">
-            <input style="border-radius: 20px; border: 2px solid #fff; margin-left: 60px; width: 400px; padding: 6px 30px 6px 10px;" type="search" placeholder="Buscar productos..." aria-label="Buscar" name="consulta">
+            <input style="border-radius: 20px; border: 2px solid #fff; margin-left: 240px; width: 400px; padding: 6px 30px 6px 10px;" type="search" placeholder="Buscar productos..." aria-label="Buscar">
             <i class="fa fa-search" style="position: absolute; right: 15px; top: 13px; color: rgb(10, 10, 10);"></i>
           </div>
           </form>
@@ -103,7 +102,19 @@
     </nav>
   </header>
   <br>
-  <br>
+  
+  <div class="dropdown">
+    <button style="border-radius: 400px; width: 50px;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <img src="{{ url_for('static', filename='17004.png') }}" alt="user" style="width: 20px;">
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+       {{mensaje}}
+       <a class="nav-link" href="./"><u>Cerrar sesión</u></a>
+    </ul>
+  </div>
+  {% for x in usuario %}
+    <option>{{x}}</option>
+  {% endfor %}
 
   <div class="container mt-4">
     <h2 class="titulo-tabla"></h2>
@@ -145,13 +156,6 @@
 
 
 
-
-        
-        
-
-      
-      
-      
 
 
 

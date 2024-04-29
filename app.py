@@ -92,29 +92,48 @@ def ingresarProd():
 
 @app.route('/update', methods=['GET', 'POST'])
 def update():
-    if request.method == 'POST':
-        idProducto = request.form.get('idProducto') 
-        nuevoPrecio = request.form.get('precio')
-        nuevaCantidad = request.form.get('cantidad')
-
-        
-        try:
-            cursor = mysql.connection.cursor()
-            cursor.execute('UPDATE producto SET precio = %s, cantidad = %s WHERE idProducto = %s',
-                           (nuevoPrecio, nuevaCantidad, idProducto))
-            mysql.connection.commit()
-            cursor.close()
-            print("Actualización correcta")
-        except mysql.connector.Error as error:
-            print("Error MySQL:", error)
-
+    
+    idProducto = request.form.get('idProducto') 
+    
     
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT producto.idProducto, producto.nombre, producto.descripcion, categorias.nombre, producto.cantidad, producto.precio FROM producto INNER JOIN categorias ON categorias.idcategorias = id_cat_corresp")
-    productos = cursor.fetchall()
+    cursor.execute (f"select * FROM producto WHERE (`idProducto` = '{idProducto}')")
+    productos = cursor.fetchone()
     cursor.close()
 
-    return render_template("update.html", title="Pagina Principal", user="PRODUCTOS INGRESADOS CORRECTAMENTE", productos=productos)
+    return render_template("update.html", productos=productos)
+
+#CONFIRMAR MODIFICACION DEL PRODUCTO
+from flask import redirect
+
+@app.route('/confirmarcambios', methods=['POST'])
+def confirmarcambios():
+    idProducto = request.form.get('ID') 
+    nombre = request.form.get('nombre') 
+    descripcion = request.form.get('descripcion') 
+    precio = request.form.get('precio') 
+    cantidad = request.form.get('cantidad') 
+
+    cursor = mysql.connection.cursor()
+    cursor.execute(f"UPDATE producto SET descripcion = '{descripcion}', precio = '{precio}', cantidad = '{cantidad}' WHERE idProducto = {idProducto};")
+    mysql.connection.commit()  # Guardar los cambios en la base de datos
+    cursor.close()
+
+    return redirect('/homeAdmin')
+
+#ELIMINAR PRODUCTOS
+@app.route('/borrar', methods=['GET', 'POST'])
+def ue():
+    
+    idProducto = request.form.get('idProducto') 
+    print(idProducto)
+    
+    cursor = mysql.connection.cursor()
+    cursor.execute (f"Delete FROM producto WHERE (`idProducto` = '{idProducto}')")
+    mysql.connection.commit()  # Guardar los cambios en la base de datos
+    cursor.close()
+
+    return redirect('/homeAdmin')
 
 
 def listabebidas():

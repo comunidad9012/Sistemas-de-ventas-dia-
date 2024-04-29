@@ -135,7 +135,15 @@
               <li class="list-group-item"><strong>Cantidad:</strong> {{i[4]}}</li>
             </ul>
             <div class="card-body">
-              <button class="btn btn-primary" type="submit" style="background-color: rgb(255, 0, 0);">Comprar</button>
+              <form action="/update" method="POST">
+                <button class="btn btn-primary" type="submit" style="background-color: rgb(0, 17, 255);">Actualizar</button>
+                <input type="hidden" name="idProducto" value="{{i[0]}}">
+              </form>
+              <form action="/borrar" method="POST">
+                <button class="btn btn-primary" type="submit" style="background-color: rgb(255, 0, 0); margin-left: 100px; margin-top: -66px;">Eliminar</button>
+                <input type="hidden" name="idProducto" value="{{i[0]}}">
+              </form>
+
             </div>
           </div>
         </div>

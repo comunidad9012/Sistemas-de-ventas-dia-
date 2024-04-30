@@ -323,7 +323,7 @@ def crearRegistro():
     msg.body='tu link es {}'.format(link)
     mail.send(msg)
 
-    return "<h1>Revisa tu mail y confirma tu cuenta</h1>"
+    return "<h1>revisa tu mail</h1>"
 
 @app.route('/confirm_email/<token>')
 def confirm_email(token):

@@ -7,17 +7,35 @@ import os
 from datetime import datetime
 from random import sample
 from flask_mail import Mail, Message
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+
 
 
 
 app=Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = 'static'
+#CONFIGURACION DE LA BASE DE DATOS
+app.config['MYSQL_HOST']='localhost'
+app.config['MYSQL_USER']='genaro'
+app.config['MYSQL_PASSWORD']='password'
+app.config['MYSQL_DB']='sistema-ventas'
+mysql=MySQL(app)
+#-----------------------------------------------------
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'PROGRAMACION2023'
-app.config['MYSQL_DB'] = 'sistemadeventas'
+
+#CONFIGURACION DE FLASK MAIL
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'gpanelli3@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qsxl bfml iosb beta'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail= Mail(app)
+
+app.secret_key="secret_key"
+s = URLSafeTimedSerializer('Thisisasecret!')
+
 
 mysql=MySQL(app)
 
@@ -296,8 +314,25 @@ def crearRegistro():
     cursor.execute('INSERT INTO usuario(usuario,contra,id_rol) VALUES(%s,%s,%s)', (nom, contra, 2))
     mysql.connection.commit()
 
-    return render_template("registro.html", mensaje="Usuario registrado correctamente")
+    #aca esta la confirmacion del mail de la cuenta que se registra
+    #MAIL--------------------------------------------------------------------------
+    token= s.dumps(nom)
 
+    msg=Message ('Confirmar email', sender=app.config['MAIL_USERNAME'], recipients=[nom])
+    link= url_for('confirm_email', token=token, _external=True)
+    msg.body='tu link es {}'.format(link)
+    mail.send(msg)
+
+    return "<h1>Revisa tu mail y confirma tu cuenta</h1>"
+
+@app.route('/confirm_email/<token>')
+def confirm_email(token):
+    try:
+        email = s.loads(token, max_age=3600)
+    except SignatureExpired:
+        return '<h1>El token expiro</h1>'
+    return redirect(url_for('login', mensaje="Usuario registrado correctamente"))
+#MAIL---------------------------------------------------------------------
 
 @app.route('/buscarprod', methods=['POST'])
 def buscarprod():

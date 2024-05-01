@@ -277,12 +277,23 @@ def ingreso():
         if account:
             session['logueado'] = True
             session['usuario'] = usuario
+            
+            ingreso=account[4]
 
 
             if account[3]==1:
                 return redirect(url_for('homeAdmin'))
 
             elif account[3]==2:
+                #aca agrego la funcionalidad para saber la cantidad de veces que ingreso un usuario
+                ingreso+=1
+                
+                updateQuery=('update usuario set ingresos=%s where usuario =%s and contra=%s')
+                cursor.execute(updateQuery, (ingreso,usuario, contra))
+
+                mysql.connection.commit()
+                cursor.close()
+
                 return redirect(url_for('homeUser'))
         
         else:
@@ -348,6 +359,14 @@ def buscarprod():
     
     return render_template('productobuscado.html', prodobtenido=prodobtenido)
     
+@app.route('/usuAdministrar')
+def usuAdministrar():
+    cursor=mysql.connection.cursor()
+    cursor.execute("SELECT usuario,contra,ingresos from usuario")
+    usuarios=cursor.fetchall()
+
+    return render_template("usuAdministrar.html", usuario=usuarios)
+
 
 @app.route('/logout')
 def logout():
